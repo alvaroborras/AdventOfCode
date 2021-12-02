@@ -1,14 +1,33 @@
+# Day 1, part 1
+# Given a list of integers, count the number of times that the sequence increases
 @time begin
-    open("input.txt", "r") do f
-        prev_val = UInt16(0);
-        answer = 0;
-        for line in eachline(f)    
-            cur_val = parse(UInt16, line);
-            if prev_val > 0 && cur_val > prev_val
-                answer+=1;
-            end
-            prev_val = cur_val;
+    answer = 0;
+    f = open("input.txt", "r");
+    heights = parse.(Int16, readlines(f));
+    for j = 2:length(heights)
+        if heights[j] > heights[j - 1]
+            answer += 1;
         end
-        print("Answer: $(answer)")
     end
+    close(f)
+    println("Answer : $(answer)")
+end
+
+# Day 1, part 2
+# Now, instead of looking at single elements, count the number of times that the 3-rolling sum increases
+@time begin
+    f = open("input.txt", "r");
+    heights = parse.(Int16, readlines(f));
+    ind = 1:3;
+    answer = 0;
+    prev_sum = sum(heights[ind]);
+    for j = 2:length(heights)-2
+        if sum(heights[ind .+ 1]) > prev_sum
+            answer += 1;
+        end
+        
+        ind = ind .+ 1;
+        prev_sum = sum(heights[ind]);
+    end
+    println("Answer part 2: $(answer)")
 end
